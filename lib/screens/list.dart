@@ -38,7 +38,9 @@ class SubList extends ListItem {
 }
 
 class ListScreen extends StatefulWidget {
-  ListScreen({Key key}) : super(key: key);
+  ListScreen({Key key, this.name}) : super(key: key);
+
+  final String name;
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -75,7 +77,12 @@ class _ListScreenState extends State<ListScreen> {
       width: MediaQuery.of(context).size.width,
       child: Column(
         children: <Widget>[
-          Text("Min lista"),
+          Text(
+            widget.name,
+            style: new TextStyle(
+              fontSize: 48,
+            )
+          ),
           Row(),
           FlatButton(
             child: Text("Create item"),
