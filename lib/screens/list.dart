@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
-enum ListType { text, checkbox, sublist }
+enum ListType {
+  Text,
+  Checkbox,
+  Sublist
+}
 
 class ListItem {
   final String id;
@@ -54,7 +58,7 @@ class _ListScreenState extends State<ListScreen> {
 
   void createItem() {
     setState(() {
-      list.add(new ListItem("2", ListType.text, "I am number two"));
+      list.add(new ListItem("2", ListType.Text, "I am number two"));
     });
   }
 
