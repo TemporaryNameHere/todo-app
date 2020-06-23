@@ -23,7 +23,8 @@ AppState reducer(AppState state, dynamic action) {
 
     return new AppState(allLists: {
       action.listId: DList.from(
-        oldList: list, items: [...list.items, action.item],
+        oldList: list,
+        items: [...list.items, action.item],
       ),
     });
   }

@@ -1,6 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
-import '../data_types/list_items.dart';
+import 'package:todo_app/data_types/list_items.dart';
+import 'package:todo_app/store/store.dart';
+
+typedef Dispatch = void Function(DListItem i);
+
+class ListScreenViewModel {
+  final DList list;
+  final Dispatch dispatch;
+
+  ListScreenViewModel(this.list, this.dispatch);
+
+  ListScreenViewModel from(Store<AppState> store) {
+    return ListScreenViewModel(
+        store.state.allLists[store.state.activeListId],
+        (DListItem item) =>
+            store.dispatch(new AddItemAction(store.state.activeListId, item)));
+  }
+}
 
 class ListScreen extends StatefulWidget {
   ListScreen({Key key, this.name}) : super(key: key);
@@ -31,39 +50,36 @@ class _ListScreenState extends State<ListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              widget.name,
-              style: new TextStyle(
-                fontSize: 48,
+    return StoreConnector<AppState, DList>(
+      converter: (store) => store.state.allLists[store.state.activeListId],
+      builder: (context, viewModel) => Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                widget.name,
+                style: new TextStyle(
+                  fontSize: 48,
+                ),
               ),
             ),
-          ),
-          Row(),
-          FlatButton(
-            child: Text("Create item"),
-            onPressed: this.createItem,
-          ),
-          Container(
-            child: ListView.builder(
-              itemBuilder: (ctx, index) => this.list[index].build(ctx),
-              itemCount: this.list.length,
+            Row(),
+            FlatButton(
+              child: Text("Create item"),
+              onPressed: this.createItem,
             ),
-            height: 500,
-          ),
-        ],
+            Container(
+              child: ListView.builder(
+                itemBuilder: (ctx, index) => this.list[index].build(ctx),
+                itemCount: this.list.length,
+              ),
+              height: 500,
+            ),
+          ],
+        ),
       ),
     );
   }
