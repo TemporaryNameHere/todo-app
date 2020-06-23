@@ -21,11 +21,11 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-  final List<ListItem> list = [];
+  final List<DListItem> list = [];
 
   void createItem() {
     setState(() {
-      list.add(new ListItem("2", ListType.Text, "I am number two"));
+      list.add(new DListItem("2", ListType.Text, "I am number two"));
     });
   }
 

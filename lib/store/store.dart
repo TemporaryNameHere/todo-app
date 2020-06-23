@@ -3,21 +3,32 @@ import 'package:redux/redux.dart';
 import '../data_types/list_items.dart';
 
 class AppState {
-  final List<List<ListItem>> allLists;
+  final Map<String, DList> allLists;
+  final String activeListId;
 
-  AppState({this.allLists = const []});
+  AppState({this.allLists = const {}, this.activeListId = null});
+}
+
+class AddItemAction {
+  final String listId;
+
+  final DListItem item;
+
+  AddItemAction(this.listId, this.item);
 }
 
 AppState reducer(AppState state, dynamic action) {
   if (action is AddItemAction) {
-    return new AppState(allLists: [...state.allLists, action.item]);
-  }
-  return new AppState();
-}
+    var list = state.allLists[action.listId];
 
-class AddItemAction {
-  final ListItem item;
-  AddItemAction(this.item);
+    return new AppState(allLists: {
+      action.listId: DList.from(
+        oldList: list, items: [...list.items, action.item],
+      ),
+    });
+  }
+
+  return state;
 }
 
 final store = new Store(reducer, initialState: new AppState());

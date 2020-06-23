@@ -1,10 +1,33 @@
+import 'package:flutter/material.dart';
 
-enum ListType { Text, Checkbox, Sublist }class ListItem {
+class DList {
+  String id;
+  String name;
+  List<DListItem> items;
+
+  DList({@required this.id, @required this.name, @required this.items});
+
+  static from({
+    @required DList oldList,
+    String id,
+    String name,
+    List<DListItem> items,
+  }) =>
+      new DList(
+        id: id ?? oldList.id,
+        name: name ?? oldList.name,
+        items: items ?? oldList.items,
+      );
+}
+
+enum ListType { Text, Checkbox, Sublist }
+
+class DListItem {
   final String id;
   final ListType type;
   final String text;
 
-  ListItem(this.id, this.type, this.text);
+  DListItem(this.id, this.type, this.text);
 
   Widget build(BuildContext context) {
     return Container(
@@ -18,14 +41,14 @@ enum ListType { Text, Checkbox, Sublist }class ListItem {
   }
 }
 
-class ListCheckbox extends ListItem {
+class DListCheckbox extends DListItem {
   final bool checked;
 
-  ListCheckbox(id, type, text, this.checked) : super(id, type, text);
+  DListCheckbox(id, type, text, this.checked) : super(id, type, text);
 }
 
-class SubList extends ListItem {
-  final List<ListItem> sublist;
+class DSubList extends DListItem {
+  final List<DListItem> sublist;
 
-  SubList(id, type, text, this.sublist) : super(id, type, text);
+  DSubList(id, type, text, this.sublist) : super(id, type, text);
 }

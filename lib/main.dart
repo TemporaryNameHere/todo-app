@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/rendering.dart'; // for debug
 import 'package:flutter_redux/flutter_redux.dart';
 
+import 'store/store.dart';
+
 void main() {
   debugPaintSizeEnabled = true;
   runApp(MyApp());
@@ -14,6 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreProvider(
+      store: store,
       child: MaterialApp(
         //debugShowMaterialGrid: true,
         theme: new ThemeData(
