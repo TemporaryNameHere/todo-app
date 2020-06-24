@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+enum ListType { Text, Checkbox, Sublist }
+
 class DList {
   final String id;
   final String name;
@@ -17,14 +19,15 @@ class DList {
         items = items ?? oldList.items;
 }
 
-enum ListType { Text, Checkbox, Sublist }
-
 class DListItem {
   final String id;
   final ListType type;
   final String text;
 
   DListItem(this.id, this.type, this.text);
+
+  @override
+  String toString() => 'DListItem:$id';
 
   Widget build(BuildContext context) {
     return Container(
