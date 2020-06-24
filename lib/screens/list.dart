@@ -13,9 +13,10 @@ class ListScreenViewModel {
 
   ListScreenViewModel.from(Store<AppState> store)
       : this(
-          store.state.allLists[store.state.activeListId],
+          store.state.allListsState
+              .allLists[store.state.allListsState.activeListId],
           (DListItem item) => store.dispatch(
-            AddItemAction(store.state.activeListId, item),
+            AddItemAction(store.state.allListsState.activeListId, item),
           ),
         );
 }
@@ -50,7 +51,8 @@ class _ListScreenState extends State<ListScreen> {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, DList>(
-      converter: (store) => store.state.allLists[store.state.activeListId],
+      converter: (store) => store
+          .state.allListsState.allLists[store.state.allListsState.activeListId],
       builder: (context, viewModel) => Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
