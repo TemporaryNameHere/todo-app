@@ -5,20 +5,19 @@ import 'package:redux/redux.dart';
 import 'package:todo_app/data_types/list_items.dart';
 import 'package:todo_app/store/store.dart';
 
-typedef Dispatch = void Function(DListItem i);
-
 class ListScreenViewModel {
   final DList list;
-  final Dispatch dispatch;
+  final void Function(DListItem) dispatch;
 
   ListScreenViewModel(this.list, this.dispatch);
 
-  ListScreenViewModel from(Store<AppState> store) {
-    return ListScreenViewModel(
-        store.state.allLists[store.state.activeListId],
-        (DListItem item) =>
-            store.dispatch(new AddItemAction(store.state.activeListId, item)));
-  }
+  ListScreenViewModel.from(Store<AppState> store)
+      : this(
+          store.state.allLists[store.state.activeListId],
+          (DListItem item) => store.dispatch(
+            AddItemAction(store.state.activeListId, item),
+          ),
+        );
 }
 
 class ListScreen extends StatefulWidget {
@@ -44,7 +43,7 @@ class _ListScreenState extends State<ListScreen> {
 
   void createItem() {
     setState(() {
-      list.add(new DListItem("2", ListType.Text, "I am number two"));
+      list.add(DListItem('2', ListType.Text, 'I am number two'));
     });
   }
 
@@ -61,20 +60,20 @@ class _ListScreenState extends State<ListScreen> {
               alignment: Alignment.centerLeft,
               child: Text(
                 widget.name,
-                style: new TextStyle(
+                style: TextStyle(
                   fontSize: 48,
                 ),
               ),
             ),
             Row(),
             FlatButton(
-              child: Text("Create item"),
-              onPressed: this.createItem,
+              child: Text('Create item'),
+              onPressed: createItem,
             ),
             Container(
               child: ListView.builder(
-                itemBuilder: (ctx, index) => this.list[index].build(ctx),
-                itemCount: this.list.length,
+                itemBuilder: (ctx, index) => list[index].build(ctx),
+                itemCount: list.length,
               ),
               height: 500,
             ),

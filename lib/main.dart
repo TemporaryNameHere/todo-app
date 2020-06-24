@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       store: store,
       child: MaterialApp(
         //debugShowMaterialGrid: true,
-        theme: new ThemeData(
+        theme: ThemeData(
           brightness: Brightness.dark,
           backgroundColor: Colors.red,
           textTheme: GoogleFonts.rubikTextTheme(
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         home: Scaffold(
           body: SafeArea(
             child: ListScreen(
-              name: "Min lista",
+              name: 'Min lista',
             ),
           ),
         ),

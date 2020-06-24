@@ -6,7 +6,7 @@ class AppState {
   final Map<String, DList> allLists;
   final String activeListId;
 
-  AppState({this.allLists = const {}, this.activeListId = null});
+  AppState({this.allLists = const {}, this.activeListId});
 }
 
 class AddItemAction {
@@ -21,7 +21,7 @@ AppState reducer(AppState state, dynamic action) {
   if (action is AddItemAction) {
     var list = state.allLists[action.listId];
 
-    return new AppState(allLists: {
+    return AppState(allLists: {
       action.listId: DList.from(
         oldList: list,
         items: [...list.items, action.item],
@@ -32,4 +32,4 @@ AppState reducer(AppState state, dynamic action) {
   return state;
 }
 
-final store = new Store(reducer, initialState: new AppState());
+final store = Store(reducer, initialState: AppState());

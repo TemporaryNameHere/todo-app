@@ -7,17 +7,16 @@ class DList {
 
   DList({@required this.id, @required this.name, @required this.items});
 
-  static from({
+  DList.from({
     @required DList oldList,
-    String id,
-    String name,
-    List<DListItem> items,
-  }) =>
-      new DList(
-        id: id ?? oldList.id,
-        name: name ?? oldList.name,
-        items: items ?? oldList.items,
-      );
+    this.id,
+    this.name,
+    this.items,
+  }) {
+    id ??= oldList.id;
+    name ??= oldList.name;
+    items ??= oldList.items;
+  }
 }
 
 enum ListType { Text, Checkbox, Sublist }
@@ -32,8 +31,8 @@ class DListItem {
   Widget build(BuildContext context) {
     return Container(
       child: Text(
-        this.text,
-        style: new TextStyle(
+        text,
+        style: TextStyle(
           fontSize: 24,
         ),
       ),
