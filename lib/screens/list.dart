@@ -22,9 +22,7 @@ class ListScreenViewModel {
 }
 
 class ListScreen extends StatefulWidget {
-  ListScreen({Key key, this.name}) : super(key: key);
-
-  final String name;
+  ListScreen({Key key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -50,7 +48,7 @@ class _ListScreenState extends State<ListScreen> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                widget.name,
+                viewModel.list.name,
                 style: TextStyle(
                   fontSize: 48,
                 ),

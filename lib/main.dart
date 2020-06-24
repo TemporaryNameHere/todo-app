@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'data_types/list_items.dart';
 import 'screens/list.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/rendering.dart'; // for debug
@@ -17,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreProvider(
-      store: store,
+      store: createStore(),
       child: MaterialApp(
         //debugShowMaterialGrid: true,
         theme: ThemeData(
@@ -29,9 +28,7 @@ class MyApp extends StatelessWidget {
         ),
         home: Scaffold(
           body: SafeArea(
-            child: ListScreen(
-              name: 'Min lista',
-            ),
+            child: ListScreen(),
           ),
         ),
       ),
