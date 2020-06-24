@@ -6,15 +6,15 @@ class AllListsState {
   final String activeListId;
   final Map<String, DList> allLists;
 
-  AllListsState(this.activeListId, this.allLists);
+  const AllListsState(this.activeListId, this.allLists);
 
   // TODO: Reduce to actual initial state
-  AllListsState.initial()
+  const AllListsState.initial()
       : activeListId = '123',
         allLists = const {
           '123': DList(
             id: '123',
-            name: 'Min lista',
+            name: 'Min lisa',
             items: <DListItem>[],
           )
         };
@@ -23,16 +23,16 @@ class AllListsState {
 class AppState {
   final AllListsState allListsState;
 
-  AppState(this.allListsState);
+  const AppState(this.allListsState);
 
-  AppState.initial() : allListsState = AllListsState.initial();
+  const AppState.initial() : allListsState = const AllListsState.initial();
 }
 
 class AddItemAction {
   final String listId;
   final DListItem item;
 
-  AddItemAction(this.listId, this.item);
+  const AddItemAction(this.listId, this.item);
 }
 
 AllListsState allListsReducer(AllListsState state, dynamic action) {
@@ -53,4 +53,4 @@ AllListsState allListsReducer(AllListsState state, dynamic action) {
 AppState reducer(AppState state, dynamic action) =>
     AppState(allListsReducer(state.allListsState, action));
 
-final store = Store(reducer, initialState: AppState.initial());
+Store<AppState> createStore({AppState initialState = const AppState.initial()}) => Store(reducer, initialState: initialState );
