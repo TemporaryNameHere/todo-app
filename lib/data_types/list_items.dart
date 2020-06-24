@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 
 class DList {
-  String id;
-  String name;
-  List<DListItem> items;
+  final String id;
+  final String name;
+  final List<DListItem> items;
 
-  DList({@required this.id, @required this.name, @required this.items});
+  const DList({@required this.id, @required this.name, @required this.items});
 
   DList.from({
     @required DList oldList,
-    this.id,
-    this.name,
-    this.items,
-  }) {
-    id ??= oldList.id;
-    name ??= oldList.name;
-    items ??= oldList.items;
-  }
+    id,
+    name,
+    items,
+  })  : id = id ?? oldList.id,
+        name = name ?? oldList.name,
+        items = items ?? oldList.items;
 }
 
 enum ListType { Text, Checkbox, Sublist }

@@ -7,9 +7,9 @@ import 'package:todo_app/store/store.dart';
 
 class ListScreenViewModel {
   final DList list;
-  final void Function(DListItem) dispatch;
+  final void Function(DListItem) addItem;
 
-  ListScreenViewModel(this.list, this.dispatch);
+  ListScreenViewModel(this.list, this.addItem);
 
   ListScreenViewModel.from(Store<AppState> store)
       : this(
@@ -40,22 +40,11 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-  final List<DListItem> list = [];
-
-  void createItem() {
-    setState(() {
-      list.add(DListItem('2', ListType.Text, 'I am number two'));
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, DList>(
-      converter: (store) => store
-          .state.allListsState.allLists[store.state.allListsState.activeListId],
+    return StoreConnector<AppState, ListScreenViewModel>(
+      converter: (store) => ListScreenViewModel.from(store),
       builder: (context, viewModel) => Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
         child: Column(
           children: <Widget>[
             Align(
@@ -70,13 +59,18 @@ class _ListScreenState extends State<ListScreen> {
             Row(),
             FlatButton(
               child: Text('Create item'),
-              onPressed: createItem,
+              onPressed: () => viewModel.addItem(
+                DListItem('3', ListType.Text, 'shit'),
+              ),
             ),
             Container(
-              child: ListView.builder(
-                itemBuilder: (ctx, index) => list[index].build(ctx),
-                itemCount: list.length,
-              ),
+              child: viewModel.list == null
+                  ? Text("You haven't selected a list!")
+                  : ListView.builder(
+                      itemBuilder: (ctx, index) =>
+                          viewModel.list.items[index].build(ctx),
+                      itemCount: viewModel.list.items.length,
+                    ),
               height: 500,
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'data_types/list_items.dart';
 import 'screens/list.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/rendering.dart'; // for debug
@@ -23,9 +24,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
           backgroundColor: Colors.red,
           textTheme: GoogleFonts.rubikTextTheme(
-            ThemeData
-              .dark()
-              .textTheme,
+            ThemeData.dark().textTheme,
           ),
         ),
         home: Scaffold(

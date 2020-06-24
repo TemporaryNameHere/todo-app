@@ -8,9 +8,16 @@ class AllListsState {
 
   AllListsState(this.activeListId, this.allLists);
 
+  // TODO: Reduce to actual initial state
   AllListsState.initial()
-      : activeListId = null,
-        allLists = const {};
+      : activeListId = '123',
+        allLists = const {
+          '123': DList(
+            id: '123',
+            name: 'Min lista',
+            items: <DListItem>[],
+          )
+        };
 }
 
 class AppState {
@@ -43,6 +50,7 @@ AllListsState allListsReducer(AllListsState state, dynamic action) {
   return state;
 }
 
-AppState reducer(AppState state, dynamic action) => AppState(state.allListsState);
+AppState reducer(AppState state, dynamic action) =>
+    AppState(allListsReducer(state.allListsState, action));
 
 final store = Store(reducer, initialState: AppState.initial());
