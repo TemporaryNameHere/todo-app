@@ -58,13 +58,22 @@ class _ListItemState extends State<ListItem> {
 
   double dragPosition = 0;
 
+  void onDragFinished(whatever) {
+    if (dragPosition.abs() > 500) {
+      return; // Delete
+    }
+
+    // Animate back to original position
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onPanUpdate: (details) {
-        setState(() => dragPosition += details.delta.dx);
-      },
-      child: Container(
+      onPanUpdate: (details) =>
+          setState(() => dragPosition += details.delta.dx),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeIn,
         transform:
             Transform.translate(offset: Offset.fromDirection(0, dragPosition))
                 .transform,
