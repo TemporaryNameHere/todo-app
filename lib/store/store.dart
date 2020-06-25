@@ -35,6 +35,13 @@ class AddItemAction {
   const AddItemAction(this.listId, this.item);
 }
 
+class RemoveItemAction {
+  final String listId;
+  final int index;
+
+  const RemoveItemAction(this.listId, this.index);
+}
+
 AllListsState allListsReducer(AllListsState state, dynamic action) {
   if (action is AddItemAction) {
     var list = state.allLists[action.listId];
@@ -43,6 +50,20 @@ AllListsState allListsReducer(AllListsState state, dynamic action) {
       action.listId: DList.from(
         oldList: list,
         items: [...list.items, action.item],
+      ),
+    });
+  }
+
+  if (action is RemoveItemAction) {
+    var list = state.allLists[action.listId];
+    var items = [...list.items];
+
+    items.removeAt(action.index);
+
+    return AllListsState(state.activeListId, {
+      action.listId: DList.from(
+        oldList: list,
+        items: items,
       ),
     });
   }
