@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 enum ListType { Text, Checkbox, Sublist }
 
+@immutable
 class DList {
   final String id;
   final String name;
@@ -19,31 +20,63 @@ class DList {
         items = items ?? oldList.items;
 }
 
+@immutable
 class DListItem {
   final String id;
   final ListType type;
   final String text;
 
-  final TextEditingController controller;
-
-  DListItem(this.id, this.type, this.text)
-      : controller = TextEditingController(text: text);
+  DListItem(this.id, this.type, this.text);
 
   @override
   String toString() {
     var str = super.toString();
     return '${str.substring(13, str.length - 1)}:$id';
   }
+}
 
+class ListItem extends StatefulWidget {
+  ListItem({Key key, @required this.item}) : super(key: key) {
+    print('!');
+  }
+
+  final DListItem item;
+
+  @override
+  _ListItemState createState() => _ListItemState();
+}
+
+class _ListItemState extends State<ListItem> {
+  @override
+  void initState() {
+    super.initState();
+
+    controller = TextEditingController(text: widget.item.text);
+  }
+
+  TextEditingController controller;
+
+  double dragPosition = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      child: TextField(
-        controller: controller,
+    return GestureDetector(
+      onPanUpdate: (details) {
+        setState(() => dragPosition += details.delta.dx);
+      },
+      child: Container(
+        transform:
+            Transform.translate(offset: Offset.fromDirection(0, dragPosition))
+                .transform,
+        child: TextField(
+          controller: controller,
+        ),
       ),
     );
   }
 }
 
+@immutable
 class DListCheckbox extends DListItem {
   final bool checked;
 
@@ -53,6 +86,7 @@ class DListCheckbox extends DListItem {
   String toString() => '${super.toString()}:$checked';
 }
 
+@immutable
 class DSubList extends DListItem {
   final List<DListItem> sublist;
 

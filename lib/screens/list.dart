@@ -66,7 +66,7 @@ class _ListScreenState extends State<ListScreen> {
                   ? Text("You haven't selected a list!")
                   : ListView.builder(
                       itemBuilder: (ctx, index) =>
-                          viewModel.list.items[index].build(ctx),
+                          ListItem(item: viewModel.list.items[index]),
                       itemCount: viewModel.list.items.length,
                     ),
               height: 500,
