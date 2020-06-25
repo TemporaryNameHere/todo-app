@@ -58,7 +58,7 @@ class _ListScreenState extends State<ListScreen> {
             FlatButton(
               child: Text('Create item'),
               onPressed: () => viewModel.addItem(
-                DListItem('3', ListType.Text, 'shit'),
+                DListCheckbox('3', ListType.Text, 'shit', false),
               ),
             ),
             Container(

@@ -24,18 +24,21 @@ class DListItem {
   final ListType type;
   final String text;
 
-  DListItem(this.id, this.type, this.text);
+  final TextEditingController controller;
+
+  DListItem(this.id, this.type, this.text)
+      : controller = TextEditingController(text: text);
 
   @override
-  String toString() => 'DListItem:$id';
+  String toString() {
+    var str = super.toString();
+    return '${str.substring(13, str.length - 1)}:$id';
+  }
 
   Widget build(BuildContext context) {
     return Container(
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 24,
-        ),
+      child: TextField(
+        controller: controller,
       ),
     );
   }
@@ -45,6 +48,9 @@ class DListCheckbox extends DListItem {
   final bool checked;
 
   DListCheckbox(id, type, text, this.checked) : super(id, type, text);
+
+  @override
+  String toString() => '${super.toString()}:$checked';
 }
 
 class DSubList extends DListItem {
