@@ -36,9 +36,7 @@ class DListItem {
 }
 
 class ListItem extends StatefulWidget {
-  ListItem({Key key, @required this.item}) : super(key: key) {
-    print('!');
-  }
+  ListItem({Key key, @required this.item}) : super(key: key);
 
   final DListItem item;
 
@@ -56,30 +54,36 @@ class _ListItemState extends State<ListItem> {
 
   TextEditingController controller;
 
+  bool dragging = false;
   double dragPosition = 0;
+  double dragThreshold = 10000;
 
-  void onDragFinished(whatever) {
-    if (dragPosition.abs() > 500) {
+  void onDragFinished(details) {
+    if (dragPosition.abs() > dragThreshold) {
       return; // Delete
+    } else {
+      // Animate back to original position
+      setState(() {
+        dragging = false;
+        dragPosition = 0;
+      });
     }
-
-    // Animate back to original position
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onPanStart: (_) => dragging = true,
       onPanUpdate: (details) =>
           setState(() => dragPosition += details.delta.dx),
+      onPanEnd: onDragFinished,
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeIn,
+        curve: Curves.ease,
+        duration: dragging ? Duration.zero : Duration(milliseconds: 250),
         transform:
             Transform.translate(offset: Offset.fromDirection(0, dragPosition))
                 .transform,
-        child: TextField(
-          controller: controller,
-        ),
+        child: TextField(controller: controller),
       ),
     );
   }
