@@ -45,11 +45,16 @@ class DListItem {
 }
 
 class ListItem extends StatefulWidget {
-  ListItem({Key key, @required this.item, @required this.removeItem})
-      : super(key: key);
+  ListItem({
+    Key key,
+    @required this.item,
+    @required this.removeItem,
+    @required this.editItemText,
+  }) : super(key: key);
 
   final DListItem item;
   final void Function(String) removeItem;
+  final void Function(String, String) editItemText;
 
   @override
   _ListItemState createState() => _ListItemState();
@@ -99,7 +104,10 @@ class _ListItemState extends State<ListItem> {
         transform:
             Transform.translate(offset: Offset.fromDirection(0, _dragPosition))
                 .transform,
-        child: TextField(controller: _controller),
+        child: TextField(
+          controller: _controller,
+          onSubmitted: (text) => widget.editItemText(widget.item.id, text),
+        ),
       ),
     );
   }

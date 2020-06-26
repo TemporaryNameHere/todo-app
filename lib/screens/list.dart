@@ -9,8 +9,10 @@ class ListScreenViewModel {
   final DList list;
   final void Function(DListItem) addItem;
   final void Function(String) removeItem;
+  final void Function(String, String) editItemText;
 
-  ListScreenViewModel(this.list, this.addItem, this.removeItem);
+  ListScreenViewModel(
+      this.list, this.addItem, this.removeItem, this.editItemText);
 
   ListScreenViewModel.from(Store<AppState> store)
       : this(
@@ -21,6 +23,13 @@ class ListScreenViewModel {
           ),
           (String id) => store.dispatch(
             RemoveItemAction(store.state.allListsState.activeListId, id),
+          ),
+          (String id, String newText) => store.dispatch(
+            EditItemTextAction(
+              store.state.allListsState.activeListId,
+              id,
+              newText,
+            ),
           ),
         );
 }
@@ -78,6 +87,7 @@ class _ListScreenState extends State<ListScreen> {
                         key: Key(viewModel.list.items[index].id),
                         item: viewModel.list.items[index],
                         removeItem: viewModel.removeItem,
+                        editItemText: viewModel.editItemText,
                       ),
                       itemCount: viewModel.list.items.length,
                     ),
