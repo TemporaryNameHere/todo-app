@@ -42,6 +42,14 @@ class RemoveItemAction {
   const RemoveItemAction(this.listId, this.id);
 }
 
+class EditItemTextAction {
+  final String listId;
+  final String id;
+  final String newText;
+
+  const EditItemTextAction(this.listId, this.id, this.newText);
+}
+
 AllListsState allListsReducer(AllListsState state, dynamic action) {
   if (action is AddItemAction) {
     var list = state.allLists[action.listId];
@@ -59,8 +67,49 @@ AllListsState allListsReducer(AllListsState state, dynamic action) {
     var items = [...list.items];
 
     var index = items.indexWhere((item) => item.id == action.id);
-    if (index == null) return state;
+    if (index == -1) return state;
     items.removeAt(index);
+
+    return AllListsState(state.activeListId, {
+      action.listId: DList.from(
+        oldList: list,
+        items: items,
+      ),
+    });
+  }
+
+  if (action is EditItemTextAction) {
+    var list = state.allLists[action.listId];
+    var items = [...list.items];
+
+    var index = items.indexWhere((item) => item.id == action.id);
+    if (index == -1) return state;
+
+    var item = items[index];
+    var newItem;
+    if (item is DListCheckbox) {
+      newItem = DListCheckbox(
+        item.id,
+        item.type,
+        action.newText,
+        item.checked,
+      );
+    } else if (item is DSubList) {
+      newItem = DSubList(
+        item.id,
+        item.type,
+        action.newText,
+        item.sublist,
+      );
+    } else if (item is DListItem) {
+      newItem = DListItem(
+        item.id,
+        item.type,
+        action.newText,
+      );
+    }
+
+    items[index] = newItem;
 
     return AllListsState(state.activeListId, {
       action.listId: DList.from(

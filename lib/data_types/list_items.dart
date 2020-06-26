@@ -12,9 +12,9 @@ class DList {
 
   DList.from({
     @required DList oldList,
-    id,
-    name,
-    items,
+    String id,
+    String name,
+    List<DListItem> items,
   })  : id = id ?? oldList.id,
         name = name ?? oldList.name,
         items = items ?? oldList.items;
@@ -26,7 +26,16 @@ class DListItem {
   final ListType type;
   final String text;
 
-  DListItem(this.id, this.type, this.text);
+  const DListItem(this.id, this.type, this.text);
+
+  DListItem.from({
+    @required DListItem oldItem,
+    String id,
+    ListType type,
+    String text,
+  })  : id = id ?? oldItem.id,
+        type = type ?? oldItem.type,
+        text = text ?? oldItem.text;
 
   @override
   String toString() {

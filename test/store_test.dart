@@ -84,4 +84,49 @@ void main() {
       expect(list.items[1].id, '3');
     });
   });
+
+  group('EditItemTextAction + reducer', () {
+    test('should edit the text of an item in a list', () {
+      var activeListId = '123';
+      var items = <DListItem>[
+        DListItem('0', ListType.Text, 'First'),
+        DListItem('1', ListType.Text, 'Second'),
+        DListItem('2', ListType.Text, 'Third'),
+        DListItem('3', ListType.Text, 'Fourth'),
+      ];
+
+      var store = createStore(
+        initialState: AppState(
+          AllListsState(activeListId, {
+            activeListId: DList(
+              id: activeListId,
+              name: 'Min lisa',
+              items: items,
+            ),
+          }),
+        ),
+      );
+
+      var newText = 'New text!';
+      store.dispatch(EditItemTextAction(
+        activeListId,
+        items[0].id,
+        newText,
+      ));
+
+      var list = store.state.allListsState.allLists[activeListId];
+
+      expect(list.items[0].text, newText);
+
+      store.dispatch(EditItemTextAction(
+        activeListId,
+        items[2].id,
+        newText,
+      ));
+
+      list = store.state.allListsState.allLists[activeListId];
+
+      expect(list.items[2].text, newText);
+    });
+  });
 }
