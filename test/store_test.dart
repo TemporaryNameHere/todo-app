@@ -43,37 +43,45 @@ void main() {
   group('RemoveItemAction + reducer', () {
     test('should remove items from list', () {
       var activeListId = '123';
+      var items = <DListItem>[
+        DListItem('0', ListType.Text, 'First'),
+        DListItem('1', ListType.Text, 'Second'),
+        DListItem('2', ListType.Text, 'Third'),
+        DListItem('3', ListType.Text, 'Fourth'),
+      ];
+
       var store = createStore(
         initialState: AppState(
           AllListsState(activeListId, {
             activeListId: DList(
               id: activeListId,
               name: 'Min lisa',
-              items: <DListItem>[
-                DListItem('1', ListType.Text, 'First'),
-                DListItem('2', ListType.Text, 'Second'),
-                DListItem('3', ListType.Text, 'Third'),
-                DListItem('4', ListType.Text, 'Fourth'),
-              ],
+              items: items,
             ),
           }),
         ),
       );
 
-      store.dispatch(RemoveItemAction(activeListId, 0));
+      store.dispatch(RemoveItemAction(
+        activeListId,
+        items[0].id,
+      ));
 
       var list = store.state.allListsState.allLists[activeListId];
 
       expect(list.items.length, 3);
-      expect(list.items[0].id, '2');
+      expect(list.items[0].id, '1');
 
-      store.dispatch(RemoveItemAction(activeListId, 1));
+      store.dispatch(RemoveItemAction(
+        activeListId,
+        items[2].id,
+      ));
 
       list = store.state.allListsState.allLists[activeListId];
 
       expect(list.items.length, 2);
-      expect(list.items[0].id, '2');
-      expect(list.items[1].id, '4');
+      expect(list.items[0].id, '1');
+      expect(list.items[1].id, '3');
     });
   });
 }

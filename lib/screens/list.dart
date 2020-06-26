@@ -8,8 +8,9 @@ import 'package:todo_app/store/store.dart';
 class ListScreenViewModel {
   final DList list;
   final void Function(DListItem) addItem;
+  final void Function(String) removeItem;
 
-  ListScreenViewModel(this.list, this.addItem);
+  ListScreenViewModel(this.list, this.addItem, this.removeItem);
 
   ListScreenViewModel.from(Store<AppState> store)
       : this(
@@ -17,6 +18,9 @@ class ListScreenViewModel {
               .allLists[store.state.allListsState.activeListId],
           (DListItem item) => store.dispatch(
             AddItemAction(store.state.allListsState.activeListId, item),
+          ),
+          (String id) => store.dispatch(
+            RemoveItemAction(store.state.allListsState.activeListId, id),
           ),
         );
 }
@@ -57,16 +61,24 @@ class _ListScreenState extends State<ListScreen> {
             Row(),
             FlatButton(
               child: Text('Create item'),
-              onPressed: () => viewModel.addItem(
-                DListCheckbox('3', ListType.Text, 'shit', false),
-              ),
+              onPressed: () {
+                var items = viewModel.list.items;
+                var id = (items.isNotEmpty ? int.parse(items.last.id) + 1 : 0)
+                    .toString();
+                return viewModel.addItem(
+                  DListCheckbox(id, ListType.Text, 'Text here $id', false),
+                );
+              },
             ),
             Container(
               child: viewModel.list == null
                   ? Text("You haven't selected a list!")
                   : ListView.builder(
-                      itemBuilder: (ctx, index) =>
-                          ListItem(item: viewModel.list.items[index]),
+                      itemBuilder: (ctx, index) => ListItem(
+                        key: Key(viewModel.list.items[index].id),
+                        item: viewModel.list.items[index],
+                        removeItem: viewModel.removeItem,
+                      ),
                       itemCount: viewModel.list.items.length,
                     ),
               height: 500,

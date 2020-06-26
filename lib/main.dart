@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'screens/list.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/rendering.dart'; // for debug
+//import 'package:flutter/rendering.dart'; // for debug
 import 'package:flutter_redux/flutter_redux.dart';
 
 import 'store/store.dart';
 
 void main() {
-  debugPaintSizeEnabled = true;
+//  debugPaintSizeEnabled = true;
   runApp(MyApp());
 }
 

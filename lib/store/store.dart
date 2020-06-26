@@ -37,9 +37,9 @@ class AddItemAction {
 
 class RemoveItemAction {
   final String listId;
-  final int index;
+  final String id;
 
-  const RemoveItemAction(this.listId, this.index);
+  const RemoveItemAction(this.listId, this.id);
 }
 
 AllListsState allListsReducer(AllListsState state, dynamic action) {
@@ -58,7 +58,9 @@ AllListsState allListsReducer(AllListsState state, dynamic action) {
     var list = state.allLists[action.listId];
     var items = [...list.items];
 
-    items.removeAt(action.index);
+    var index = items.indexWhere((item) => item.id == action.id);
+    if (index == null) return state;
+    items.removeAt(index);
 
     return AllListsState(state.activeListId, {
       action.listId: DList.from(
@@ -74,4 +76,7 @@ AllListsState allListsReducer(AllListsState state, dynamic action) {
 AppState reducer(AppState state, dynamic action) =>
     AppState(allListsReducer(state.allListsState, action));
 
-Store<AppState> createStore({AppState initialState = const AppState.initial()}) => Store(reducer, initialState: initialState );
+Store<AppState> createStore({
+  AppState initialState = const AppState.initial(),
+}) =>
+    Store(reducer, initialState: initialState);

@@ -36,9 +36,11 @@ class DListItem {
 }
 
 class ListItem extends StatefulWidget {
-  ListItem({Key key, @required this.item}) : super(key: key);
+  ListItem({Key key, @required this.item, @required this.removeItem})
+      : super(key: key);
 
   final DListItem item;
+  final void Function(String) removeItem;
 
   @override
   _ListItemState createState() => _ListItemState();
@@ -49,41 +51,46 @@ class _ListItemState extends State<ListItem> {
   void initState() {
     super.initState();
 
-    controller = TextEditingController(text: widget.item.text);
+    _controller = TextEditingController(text: widget.item.text);
   }
 
-  TextEditingController controller;
+  TextEditingController _controller;
 
-  bool dragging = false;
-  double dragPosition = 0;
-  double dragThreshold = 10000;
+  bool _dragging = false;
+  double _dragPosition = 0;
+  double _dragThreshold;
 
-  void onDragFinished(details) {
-    if (dragPosition.abs() > dragThreshold) {
-      return; // Delete
+  void onDragFinished(_) {
+    if (_dragPosition.abs() > _dragThreshold) {
+      widget.removeItem(widget.item.id);
     } else {
       // Animate back to original position
       setState(() {
-        dragging = false;
-        dragPosition = 0;
+        _dragging = false;
+        _dragPosition = 0;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    _dragThreshold ??= MediaQuery.of(context).size.width / 2;
+
     return GestureDetector(
-      onPanStart: (_) => dragging = true,
+      onPanStart: (_) => _dragging = true,
       onPanUpdate: (details) =>
-          setState(() => dragPosition += details.delta.dx),
+          setState(() => _dragPosition += details.delta.dx),
       onPanEnd: onDragFinished,
       child: AnimatedContainer(
+        color: _dragPosition.abs() > _dragThreshold
+            ? Colors.red
+            : Colors.transparent,
         curve: Curves.ease,
-        duration: dragging ? Duration.zero : Duration(milliseconds: 250),
+        duration: _dragging ? Duration.zero : Duration(milliseconds: 250),
         transform:
-            Transform.translate(offset: Offset.fromDirection(0, dragPosition))
+            Transform.translate(offset: Offset.fromDirection(0, _dragPosition))
                 .transform,
-        child: TextField(controller: controller),
+        child: TextField(controller: _controller),
       ),
     );
   }
