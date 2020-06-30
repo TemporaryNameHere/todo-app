@@ -2,11 +2,49 @@ name: Main
 
 on:
   push:
-  pull_request:
 
 jobs:
-  # This workflow contains a single job called "build"
   build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+
+    - name: Initialize Flutter
+      uses: subosito/flutter-action@v1.3.2
+      with:
+        flutter-version: 1.17.4
+
+    - run: flutter pub get
+
+    - name: Build APK
+      run: flutter build apk
+  
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+
+    - name: Initialize Flutter
+      uses: subosito/flutter-action@v1.3.2
+      with:
+        flutter-version: 1.17.4
+
+    - run: flutter pub get
+
+    - name: Run tests
+      run: flutter test
+  
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,9 +63,3 @@ jobs:
 
     - name: Run linter
       run: flutter analyze
-
-    - name: Run tests
-      run: flutter test
-
-    - name: Build APK
-      run: flutter build apk
