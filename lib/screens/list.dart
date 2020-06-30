@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:reorderables/reorderables.dart';
 
 import 'package:todo_app/data_types/list_items.dart';
 import 'package:todo_app/store/store.dart';
@@ -82,19 +83,27 @@ class _ListScreenState extends State<ListScreen> {
             Container(
               child: viewModel.list == null
                   ? Text("You haven't selected a list!")
-                  : ListView.builder(
-                      itemBuilder: (ctx, index) {
-                        var item = viewModel.list.items[index];
+                  : CustomScrollView(
+                      controller: ScrollController(),
+                      slivers: <Widget>[
+                        ReorderableSliverList(
+                          onReorder: (one, two) => print('$one, $two'),
+                          delegate: ReorderableSliverChildBuilderDelegate(
+                            (ctx, index) {
+                              var item = viewModel.list.items[index];
 
-                        return ListItem(
-                          key: Key(item.id),
-                          item: item,
-                          removeItem: () => viewModel.removeItem(item.id),
-                          editItemText: (String text) =>
-                              viewModel.editItemText(item.id, text),
-                        );
-                      },
-                      itemCount: viewModel.list.items.length,
+                              return ListItem(
+                                key: Key(item.id),
+                                item: item,
+                                removeItem: () => viewModel.removeItem(item.id),
+                                editItemText: (String text) =>
+                                    viewModel.editItemText(item.id, text),
+                              );
+                            },
+                            childCount: viewModel.list.items.length,
+                          ),
+                        ),
+                      ],
                     ),
               height: 500,
             ),

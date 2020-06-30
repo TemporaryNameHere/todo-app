@@ -61,22 +61,32 @@ class ListItem extends StatefulWidget {
 }
 
 class _ListItemState extends State<ListItem> {
+  TextEditingController _controller;
+  FocusNode _textFieldFocusNode;
+
   @override
   void initState() {
     super.initState();
 
     _controller = TextEditingController(text: widget.item.text);
-    _focusNode = FocusNode(debugLabel: 'ListItem:${widget.item.id}');
+    _textFieldFocusNode = FocusNode(debugLabel: 'ListItem:${widget.item.id}');
 
-    _focusNode.addListener(() {
-      if (_focusNode.hasFocus) return;
+    _textFieldFocusNode.addListener(() {
+      if (_textFieldFocusNode.hasFocus) return;
 
       widget.editItemText(_controller.text);
     });
   }
 
-  TextEditingController _controller;
-  FocusNode _focusNode;
+  @override
+  void dispose() {
+    // Clean up the focus node when the Form is disposed.
+    _textFieldFocusNode.dispose();
+
+    super.dispose();
+  }
+
+  bool _enabled = true;
 
   bool _dragging = false;
   double _dragPosition = 0;
@@ -99,6 +109,7 @@ class _ListItemState extends State<ListItem> {
     _dragThreshold ??= MediaQuery.of(context).size.width / 2;
 
     return GestureDetector(
+      onTap: () => _textFieldFocusNode.requestFocus(),
       onPanStart: (_) => _dragging = true,
       onPanUpdate: (details) =>
           setState(() => _dragPosition += details.delta.dx),
@@ -112,9 +123,13 @@ class _ListItemState extends State<ListItem> {
         transform:
             Transform.translate(offset: Offset.fromDirection(0, _dragPosition))
                 .transform,
-        child: TextField(
-          focusNode: _focusNode,
-          controller: _controller,
+        child: IgnorePointer(
+          ignoring: !_textFieldFocusNode.hasFocus,
+          child: TextField(
+            enabled: _enabled,
+            focusNode: _textFieldFocusNode,
+            controller: _controller,
+          ),
         ),
       ),
     );
