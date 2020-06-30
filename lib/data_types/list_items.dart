@@ -66,9 +66,17 @@ class _ListItemState extends State<ListItem> {
     super.initState();
 
     _controller = TextEditingController(text: widget.item.text);
+    _focusNode = FocusNode(debugLabel: 'ListItem:${widget.item.id}');
+
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) return;
+
+      widget.editItemText(widget.item.id, _controller.text);
+    });
   }
 
   TextEditingController _controller;
+  FocusNode _focusNode;
 
   bool _dragging = false;
   double _dragPosition = 0;
@@ -105,8 +113,8 @@ class _ListItemState extends State<ListItem> {
             Transform.translate(offset: Offset.fromDirection(0, _dragPosition))
                 .transform,
         child: TextField(
+          focusNode: _focusNode,
           controller: _controller,
-          onSubmitted: (text) => widget.editItemText(widget.item.id, text),
         ),
       ),
     );
