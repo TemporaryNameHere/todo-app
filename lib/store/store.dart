@@ -52,34 +52,37 @@ class EditItemTextAction {
 
 AllListsState allListsReducer(AllListsState state, dynamic action) {
   if (action is AddItemAction) {
-    var list = state.allLists[action.listId];
+    var newAllLists = {...state.allLists};
+    var list = newAllLists[action.listId];
 
-    return AllListsState(state.activeListId, {
-      action.listId: DList.from(
-        oldList: list,
-        items: [...list.items, action.item],
-      ),
-    });
+    newAllLists[action.listId] = DList.from(
+      oldList: list,
+      items: [...list.items, action.item],
+    );
+
+    return AllListsState(state.activeListId, newAllLists);
   }
 
   if (action is RemoveItemAction) {
-    var list = state.allLists[action.listId];
+    var newAllLists = {...state.allLists};
+    var list = newAllLists[action.listId];
     var items = [...list.items];
 
     var index = items.indexWhere((item) => item.id == action.id);
     if (index == -1) return state;
     items.removeAt(index);
 
-    return AllListsState(state.activeListId, {
-      action.listId: DList.from(
-        oldList: list,
-        items: items,
-      ),
-    });
+    newAllLists[action.listId] = DList.from(
+      oldList: list,
+      items: items,
+    );
+
+    return AllListsState(state.activeListId, newAllLists);
   }
 
   if (action is EditItemTextAction) {
-    var list = state.allLists[action.listId];
+    var newAllLists = state.allLists;
+    var list = newAllLists[action.listId];
     var items = [...list.items];
 
     var index = items.indexWhere((item) => item.id == action.id);
@@ -110,13 +113,12 @@ AllListsState allListsReducer(AllListsState state, dynamic action) {
     }
 
     items[index] = newItem;
+    newAllLists[action.listId] = DList.from(
+      oldList: list,
+      items: items,
+    );
 
-    return AllListsState(state.activeListId, {
-      action.listId: DList.from(
-        oldList: list,
-        items: items,
-      ),
-    });
+    return AllListsState(state.activeListId, newAllLists);
   }
 
   return state;
