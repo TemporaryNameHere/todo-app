@@ -83,12 +83,17 @@ class _ListScreenState extends State<ListScreen> {
               child: viewModel.list == null
                   ? Text("You haven't selected a list!")
                   : ListView.builder(
-                      itemBuilder: (ctx, index) => ListItem(
-                        key: Key(viewModel.list.items[index].id),
-                        item: viewModel.list.items[index],
-                        removeItem: viewModel.removeItem,
-                        editItemText: viewModel.editItemText,
-                      ),
+                      itemBuilder: (ctx, index) {
+                        var item = viewModel.list.items[index];
+
+                        return ListItem(
+                          key: Key(item.id),
+                          item: item,
+                          removeItem: () => viewModel.removeItem(item.id),
+                          editItemText: (String text) =>
+                              viewModel.editItemText(item.id, text),
+                        );
+                      },
                       itemCount: viewModel.list.items.length,
                     ),
               height: 500,

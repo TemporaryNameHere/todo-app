@@ -53,8 +53,8 @@ class ListItem extends StatefulWidget {
   }) : super(key: key);
 
   final DListItem item;
-  final void Function(String) removeItem;
-  final void Function(String, String) editItemText;
+  final void Function() removeItem;
+  final void Function(String) editItemText;
 
   @override
   _ListItemState createState() => _ListItemState();
@@ -71,7 +71,7 @@ class _ListItemState extends State<ListItem> {
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) return;
 
-      widget.editItemText(widget.item.id, _controller.text);
+      widget.editItemText(_controller.text);
     });
   }
 
@@ -84,7 +84,7 @@ class _ListItemState extends State<ListItem> {
 
   void onDragFinished(_) {
     if (_dragPosition.abs() > _dragThreshold) {
-      widget.removeItem(widget.item.id);
+      widget.removeItem();
     } else {
       // Animate back to original position
       setState(() {
