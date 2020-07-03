@@ -86,7 +86,7 @@ class _ListItemState extends State<ListItem> {
     super.dispose();
   }
 
-  bool _enabled = true;
+  final bool _enabled = true;
 
   bool _dragging = false;
   double _dragPosition = 0;
