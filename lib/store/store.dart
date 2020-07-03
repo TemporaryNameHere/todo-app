@@ -50,6 +50,14 @@ class EditItemTextAction {
   const EditItemTextAction(this.listId, this.id, this.newText);
 }
 
+class ReorderItemsAction {
+  final String listId;
+  final num oldIndex;
+  final num newIndex;
+
+  const ReorderItemsAction(this.listId, this.oldIndex, this.newIndex);
+}
+
 var allListsReducer = combineReducers<AllListsState>([
   // AddItemAction
   TypedReducer<AllListsState, AddItemAction>((state, action) {
@@ -119,6 +127,22 @@ var allListsReducer = combineReducers<AllListsState>([
     newAllLists[action.listId] = DList.from(
       oldList: list,
       items: items,
+    );
+
+    return AllListsState(state.activeListId, newAllLists);
+  }),
+
+  // ReorderItemsAction
+  TypedReducer<AllListsState, ReorderItemsAction>((state, action) {
+    var newAllLists = {...state.allLists};
+    var list = newAllLists[action.listId];
+
+    var item = list.items.removeAt(action.oldIndex);
+    list.items.insert(action.newIndex, item);
+
+    newAllLists[action.listId] = DList.from(
+      oldList: list,
+      items: list.items,
     );
 
     return AllListsState(state.activeListId, newAllLists);
