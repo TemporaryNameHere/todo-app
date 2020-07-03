@@ -3,7 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:nanoid/nanoid.dart';
 import 'package:redux/redux.dart';
 import 'package:reorderables/reorderables.dart';
-
+import 'package:todo_app/components/base_item.dart';
 import 'package:todo_app/data_types/list_items.dart';
 import 'package:todo_app/store/store.dart';
 
@@ -93,7 +93,7 @@ class _ListScreenState extends State<ListScreen> {
                             (ctx, index) {
                               var item = viewModel.list.items[index];
 
-                              return ListItem(
+                              return BaseListItem(
                                 key: Key(item.id),
                                 item: item,
                                 removeItem: () => viewModel.removeItem(item.id),
