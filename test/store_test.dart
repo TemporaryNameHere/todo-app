@@ -129,4 +129,66 @@ void main() {
       expect(list.items[2].text, newText);
     });
   });
+
+  group('ReorderItemsAction + reducer', () {
+    var assertOrder = (DList list, List<String> order) {
+      var i = 0;
+      order.forEach((item) {
+        expect(list.items[i].id, order[i]);
+        i++;
+      });
+    };
+
+    test('should reorder items in list', () {
+      var activeListId = '123';
+      var items = <DListItem>[
+        DListItem('0', ListType.Text, 'First'),
+        DListItem('1', ListType.Text, 'Second'),
+        DListItem('2', ListType.Text, 'Third'),
+        DListItem('3', ListType.Text, 'Fourth'),
+      ];
+
+      var store = createStore(
+        initialState: AppState(
+          AllListsState(activeListId, {
+            activeListId: DList(
+              id: activeListId,
+              name: 'Min lisa',
+              items: items,
+            ),
+          }),
+        ),
+      );
+
+      store.dispatch(ReorderItemsAction(
+        activeListId,
+        0,
+        3,
+      ));
+
+      var list = store.state.allListsState.allLists[activeListId];
+
+      assertOrder(list, [
+        '1',
+        '2',
+        '3',
+        '0',
+      ]);
+
+      store.dispatch(ReorderItemsAction(
+        activeListId,
+        2,
+        3,
+      ));
+
+      list = store.state.allListsState.allLists[activeListId];
+
+      assertOrder(list, [
+        '1',
+        '2',
+        '0',
+        '3',
+      ]);
+    });
+  });
 }

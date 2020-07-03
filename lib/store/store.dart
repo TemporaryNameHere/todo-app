@@ -50,8 +50,17 @@ class EditItemTextAction {
   const EditItemTextAction(this.listId, this.id, this.newText);
 }
 
-AllListsState allListsReducer(AllListsState state, dynamic action) {
-  if (action is AddItemAction) {
+class ReorderItemsAction {
+  final String listId;
+  final num oldIndex;
+  final num newIndex;
+
+  const ReorderItemsAction(this.listId, this.oldIndex, this.newIndex);
+}
+
+var allListsReducer = combineReducers<AllListsState>([
+  // AddItemAction
+  TypedReducer<AllListsState, AddItemAction>((state, action) {
     var newAllLists = {...state.allLists};
     var list = newAllLists[action.listId];
 
@@ -61,9 +70,10 @@ AllListsState allListsReducer(AllListsState state, dynamic action) {
     );
 
     return AllListsState(state.activeListId, newAllLists);
-  }
+  }),
 
-  if (action is RemoveItemAction) {
+  // RemoveItemAction
+  TypedReducer<AllListsState, RemoveItemAction>((state, action) {
     var newAllLists = {...state.allLists};
     var list = newAllLists[action.listId];
     var items = [...list.items];
@@ -78,9 +88,10 @@ AllListsState allListsReducer(AllListsState state, dynamic action) {
     );
 
     return AllListsState(state.activeListId, newAllLists);
-  }
+  }),
 
-  if (action is EditItemTextAction) {
+  // EditItemTextAction
+  TypedReducer<AllListsState, EditItemTextAction>((state, action) {
     var newAllLists = state.allLists;
     var list = newAllLists[action.listId];
     var items = [...list.items];
@@ -119,10 +130,24 @@ AllListsState allListsReducer(AllListsState state, dynamic action) {
     );
 
     return AllListsState(state.activeListId, newAllLists);
-  }
+  }),
 
-  return state;
-}
+  // ReorderItemsAction
+  TypedReducer<AllListsState, ReorderItemsAction>((state, action) {
+    var newAllLists = {...state.allLists};
+    var list = newAllLists[action.listId];
+
+    var item = list.items.removeAt(action.oldIndex);
+    list.items.insert(action.newIndex, item);
+
+    newAllLists[action.listId] = DList.from(
+      oldList: list,
+      items: list.items,
+    );
+
+    return AllListsState(state.activeListId, newAllLists);
+  }),
+]);
 
 AppState reducer(AppState state, dynamic action) =>
     AppState(allListsReducer(state.allListsState, action));
