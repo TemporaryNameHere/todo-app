@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:nanoid/nanoid.dart';
 import 'package:redux/redux.dart';
 import 'package:reorderables/reorderables.dart';
 
@@ -74,11 +75,9 @@ class _ListScreenState extends State<ListScreen> {
             FlatButton(
               child: Text('Create item'),
               onPressed: () {
-                var items = viewModel.list.items;
-                var id = (items.isNotEmpty ? int.parse(items.last.id) + 1 : 0)
-                    .toString();
+                var id = nanoid(14);
                 return viewModel.addItem(
-                  DListCheckbox(id, ListType.Text, 'Text here $id', false),
+                  DListCheckbox(id, ListType.Text, id, false),
                 );
               },
             ),
