@@ -50,8 +50,9 @@ class EditItemTextAction {
   const EditItemTextAction(this.listId, this.id, this.newText);
 }
 
-AllListsState allListsReducer(AllListsState state, dynamic action) {
-  if (action is AddItemAction) {
+var allListsReducer = combineReducers<AllListsState>([
+  // AddItemAction
+  TypedReducer<AllListsState, AddItemAction>((state, action) {
     var newAllLists = {...state.allLists};
     var list = newAllLists[action.listId];
 
@@ -61,9 +62,10 @@ AllListsState allListsReducer(AllListsState state, dynamic action) {
     );
 
     return AllListsState(state.activeListId, newAllLists);
-  }
+  }),
 
-  if (action is RemoveItemAction) {
+  // RemoveItemAction
+  TypedReducer<AllListsState, RemoveItemAction>((state, action) {
     var newAllLists = {...state.allLists};
     var list = newAllLists[action.listId];
     var items = [...list.items];
@@ -78,9 +80,10 @@ AllListsState allListsReducer(AllListsState state, dynamic action) {
     );
 
     return AllListsState(state.activeListId, newAllLists);
-  }
+  }),
 
-  if (action is EditItemTextAction) {
+  // EditItemTextAction
+  TypedReducer<AllListsState, EditItemTextAction>((state, action) {
     var newAllLists = state.allLists;
     var list = newAllLists[action.listId];
     var items = [...list.items];
@@ -119,10 +122,8 @@ AllListsState allListsReducer(AllListsState state, dynamic action) {
     );
 
     return AllListsState(state.activeListId, newAllLists);
-  }
-
-  return state;
-}
+  }),
+]);
 
 AppState reducer(AppState state, dynamic action) =>
     AppState(allListsReducer(state.allListsState, action));
